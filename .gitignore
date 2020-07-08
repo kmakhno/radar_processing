@@ -1,7 +1,7 @@
-DebugConfig/
-Listings/
-Objects/
-RTE/
-*.Kostia
-*.uvoptx
-*.uvprojx
+/*
+!.gitignore
+!/src/
+!/inc/
+!/Objects/
+/Objects/*
+!/Objects/*.hex
