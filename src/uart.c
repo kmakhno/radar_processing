@@ -37,6 +37,7 @@ void UART_Init(void)
 	}
 	
 	NVIC_EnableIRQ(DMA1_Stream6_IRQn);
+	NVIC_EnableIRQ(DMA1_Stream5_IRQn);
 }
 
 void UART_Send(uint8_t *buff, uint32_t len)
@@ -66,6 +67,5 @@ void DMA1_Stream6_IRQHandler(void)
 	if (DMA1->HISR & DMA_HISR_TCIF6)
 	{
 		DMA1->HIFCR |= DMA_HIFCR_CTCIF6; //clear interrupt before sending
-		GPIOD->ODR |= GPIO_ODR_OD15;
 	}
 }
