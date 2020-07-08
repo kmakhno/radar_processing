@@ -1,6 +1,8 @@
 #include "stm32f4xx.h"                  // Device header
 #include "uart.h"
 
+extern void DMA1_Stream6_IRQHandler(void);
+
 void UART_Init(void)
 {
 	/* Configure PORTA PA2 - TX, PA3 - RX*/
@@ -59,12 +61,11 @@ void UART_Send(uint8_t *buff, uint32_t len)
 }
 
 
-static void DMA1_Stream6_IRQHandler(void)
+void DMA1_Stream6_IRQHandler(void)
 {
 	if (DMA1->HISR & DMA_HISR_TCIF6)
 	{
 		DMA1->HIFCR |= DMA_HIFCR_CTCIF6; //clear interrupt before sending
-		//DMA1_Stream6->CR &= ~DMA_SxCR_TCIE; //disable interrupt
 		GPIOD->ODR |= GPIO_ODR_OD15;
 	}
 }
