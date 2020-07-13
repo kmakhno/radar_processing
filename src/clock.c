@@ -67,5 +67,7 @@ int Clock_Init(void)
 
 	RCC->CR &= ~RCC_CR_HSION;
 	
+	SystemCoreClockUpdate(); //update system core clock
+	
 	return 0;
 }
