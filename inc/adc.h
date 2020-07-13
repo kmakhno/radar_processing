@@ -12,7 +12,7 @@
 #define ADC_RES_6b  (ADC_CR1_RES_0 | ADC_CR1_RES_1)
 
 void ADC_Init(void);
-void ADC_StartConv(uint8_t *buff, uint32_t len);
+void ADC_StartConv(uint16_t *buff, uint32_t len);
 void ADC_StopConv(void);
 
 #endif /* INC_ADC_H_ */
