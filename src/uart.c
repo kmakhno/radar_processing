@@ -3,7 +3,6 @@
 
 extern void DMA1_Stream3_IRQHandler(void);
 extern void USART3_IRQHandler(void);
-extern volatile uint8_t rxBuff;
 
 void UART_Init(void)
 {
@@ -40,6 +39,7 @@ void UART_Init(void)
 	
 	NVIC_EnableIRQ(DMA1_Stream3_IRQn);
 	NVIC_EnableIRQ(USART3_IRQn);
+	NVIC_SetPriority(DMA1_Stream3_IRQn,2);
 }
 
 void UART_Send(uint8_t *buff, uint32_t len)
@@ -78,6 +78,5 @@ void USART3_IRQHandler(void)
 	if (USART3->SR & USART_SR_RXNE)
 	{
 		USART3->SR &= ~USART_SR_RXNE;
-		rxBuff = (uint8_t)USART3->DR;
 	}
 }

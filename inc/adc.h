@@ -14,5 +14,7 @@
 void ADC_Init(void);
 void ADC_StartConv(uint16_t *buff, uint32_t len);
 void ADC_StopConv(void);
+uint8_t ADC_GetTransferStatus(void);
+void ADC_ClearTransferStatus(void);
 
 #endif /* INC_ADC_H_ */

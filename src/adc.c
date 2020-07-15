@@ -5,6 +5,8 @@
 
 extern void DMA2_Stream4_IRQHandler(void);
 
+static volatile uint8_t adc_tcc = 0;
+
 void ADC_Init()
 {
 	RCC->APB2ENR |= RCC_APB2ENR_ADC1EN; //enable clocking ADC1
@@ -69,6 +71,9 @@ void ADC_Init()
 void ADC_StartConv(uint16_t *buff, uint32_t len)
 {
 	volatile uint32_t counter = 0U;
+	
+	/* Clear transfer complete flag */
+	ADC_ClearTransferStatus();
 	
 	if ((ADC1->CR2 & ADC_CR2_ADON) != ADC_CR2_ADON)
 	{	
@@ -167,6 +172,16 @@ void ADC_StopConv()
 	}
 }
 
+uint8_t ADC_GetTransferStatus()
+{
+	return adc_tcc;
+}
+
+
+void ADC_ClearTransferStatus()
+{
+	adc_tcc = 0;
+}
 
 void DMA2_Stream4_IRQHandler()
 {
@@ -174,5 +189,6 @@ void DMA2_Stream4_IRQHandler()
 	{
 		/* Clear interrupt flag */
 		DMA2->HIFCR |= DMA_HIFCR_CTCIF4;
+		adc_tcc = 1;
 	}
 }

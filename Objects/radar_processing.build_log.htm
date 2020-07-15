@@ -22,16 +22,23 @@ Dialog DLL:      TCM.DLL V1.46.0.0
  
 <h2>Project:</h2>
 E:\Kostia\stm\radar_processing\radar_processing.uvprojx
-Project File Date:  07/08/2020
+Project File Date:  07/13/2020
 
 <h2>Output:</h2>
 *** Using Compiler 'V6.14', folder: 'C:\Keil_v5\ARM\ARMCLANG\Bin'
 Build target 'Target 1'
-compiling uart.c...
+src/main.c(10): warning: no previous extern declaration for non-static variable 'cmd' [-Wmissing-variable-declarations]
+volatile uint8_t cmd = 0;
+                 ^
+src/main.c(10): note: declare 'static' if the variable is not intended to be used outside of this translation unit
+volatile uint8_t cmd = 0;
+         ^
+1 warning generated.
+compiling main.c...
 linking...
-Program Size: Code=1536 RO-data=904 RW-data=4 ZI-data=1640  
+Program Size: Code=2524 RO-data=920 RW-data=4 ZI-data=2120  
 FromELF: creating hex file...
-".\Objects\radar_processing.axf" - 0 Error(s), 0 Warning(s).
+".\Objects\radar_processing.axf" - 0 Error(s), 1 Warning(s).
 
 <h2>Software Packages used:</h2>
 
