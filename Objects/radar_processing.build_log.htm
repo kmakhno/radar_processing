@@ -22,23 +22,36 @@ Dialog DLL:      TCM.DLL V1.46.0.0
  
 <h2>Project:</h2>
 E:\Kostia\stm\radar_processing\radar_processing.uvprojx
-Project File Date:  07/13/2020
+Project File Date:  07/15/2020
 
 <h2>Output:</h2>
 *** Using Compiler 'V6.14', folder: 'C:\Keil_v5\ARM\ARMCLANG\Bin'
 Build target 'Target 1'
-src/main.c(10): warning: no previous extern declaration for non-static variable 'cmd' [-Wmissing-variable-declarations]
-volatile uint8_t cmd = 0;
-                 ^
-src/main.c(10): note: declare 'static' if the variable is not intended to be used outside of this translation unit
-volatile uint8_t cmd = 0;
-         ^
-1 warning generated.
+src/main.c(17): warning: no previous extern declaration for non-static variable 'nextState' [-Wmissing-variable-declarations]
+enum states nextState = PROCESS_OFF;
+            ^
+src/main.c(17): note: declare 'static' if the variable is not intended to be used outside of this translation unit
+enum states nextState = PROCESS_OFF;
+^
+src/main.c(22): warning: no previous extern declaration for non-static variable 'rPacket' [-Wmissing-variable-declarations]
+struct packets rPacket = {0};
+               ^
+src/main.c(22): note: declare 'static' if the variable is not intended to be used outside of this translation unit
+struct packets rPacket = {0};
+^
+src/main.c(16): warning: no previous extern declaration for non-static variable 'state' [-Wmissing-variable-declarations]
+enum states state;
+            ^
+src/main.c(16): note: declare 'static' if the variable is not intended to be used outside of this translation unit
+enum states state;
+^
+3 warnings generated.
 compiling main.c...
+compiling dac.c...
 linking...
-Program Size: Code=2524 RO-data=920 RW-data=4 ZI-data=2120  
+Program Size: Code=2196 RO-data=1440 RW-data=4 ZI-data=1648  
 FromELF: creating hex file...
-".\Objects\radar_processing.axf" - 0 Error(s), 1 Warning(s).
+".\Objects\radar_processing.axf" - 0 Error(s), 3 Warning(s).
 
 <h2>Software Packages used:</h2>
 
@@ -69,7 +82,7 @@ Package Vendor: Keil
       Include file:  Drivers\CMSIS\Device\ST\STM32F4xx\Include\stm32f4xx.h
       Source file:   Drivers\CMSIS\Device\ST\STM32F4xx\Source\Templates\arm\startup_stm32f407xx.s
       Source file:   Drivers\CMSIS\Device\ST\STM32F4xx\Source\Templates\system_stm32f4xx.c
-Build Time Elapsed:  00:00:00
+Build Time Elapsed:  00:00:01
 </pre>
 </body>
 </html>

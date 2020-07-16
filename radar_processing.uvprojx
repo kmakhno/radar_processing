@@ -413,6 +413,16 @@
               <FileType>1</FileType>
               <FilePath>.\src\delay.c</FilePath>
             </File>
+            <File>
+              <FileName>fsm.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>.\src\fsm.c</FilePath>
+            </File>
+            <File>
+              <FileName>common.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>.\src\common.c</FilePath>
+            </File>
           </Files>
         </Group>
         <Group>
@@ -442,6 +452,16 @@
               <FileName>delay.h</FileName>
               <FileType>5</FileType>
               <FilePath>.\inc\delay.h</FilePath>
+            </File>
+            <File>
+              <FileName>fsm.h</FileName>
+              <FileType>5</FileType>
+              <FilePath>.\inc\fsm.h</FilePath>
+            </File>
+            <File>
+              <FileName>common.h</FileName>
+              <FileType>5</FileType>
+              <FilePath>.\inc\common.h</FilePath>
             </File>
           </Files>
         </Group>

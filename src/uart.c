@@ -1,8 +1,20 @@
 #include "stm32f4xx.h"                  // Device header
 #include "uart.h"
 
+#define RX_DATA_SIZE 3
+
 extern void DMA1_Stream3_IRQHandler(void);
 extern void USART3_IRQHandler(void);
+
+#if 1
+static volatile uint8_t rxData[RX_DATA_SIZE] = {0};
+static volatile uint8_t rxCnt = 0;
+static volatile uint8_t dataReceived = 0;
+#else
+volatile uint8_t rxData[RX_DATA_SIZE] = {0};
+volatile uint8_t rxCnt = 0;
+volatile uint8_t dataReceived = 0;
+#endif
 
 void UART_Init(void)
 {
@@ -78,5 +90,26 @@ void USART3_IRQHandler(void)
 	if (USART3->SR & USART_SR_RXNE)
 	{
 		USART3->SR &= ~USART_SR_RXNE;
+		if (rxCnt == RX_DATA_SIZE - 1)
+		{
+			rxData[rxCnt] = (uint8_t)USART3->DR;
+			rxCnt = 0;
+			dataReceived = 1;
+		}
+		else
+		{
+			rxData[rxCnt++] = (uint8_t)USART3->DR;
+		}
+	}
+}
+
+void UART_UpdateCommands(struct packets *pck)
+{
+	if (dataReceived)
+	{
+		dataReceived = 0;
+		pck->cmd = rxData[0];
+		pck->stg.tsweep = rxData[1];
+		pck->stg.bandwidth = rxData[2];
 	}
 }

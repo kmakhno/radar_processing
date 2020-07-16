@@ -70,13 +70,10 @@ void ADC_Init()
 
 void ADC_StartConv(uint16_t *buff, uint32_t len)
 {
-	volatile uint32_t counter = 0U;
-	
-	/* Clear transfer complete flag */
-	ADC_ClearTransferStatus();
-	
+	/*If ADC is disabled we need to enable it */
 	if ((ADC1->CR2 & ADC_CR2_ADON) != ADC_CR2_ADON)
-	{	
+	{
+		volatile uint32_t counter = 0U;
 		ADC1->CR2 |= ADC_CR2_ADON; //enable ADC
 		counter = (3 * (SystemCoreClock / 1000000U));
 		
@@ -85,90 +82,94 @@ void ADC_StartConv(uint16_t *buff, uint32_t len)
 		{
 			counter--;
 		} 
-	}
-	
-	if (ADC1->CR2 & ADC_CR2_ADON)
-	{
-		/* Clear end of conversion and overrun flag */
-		ADC1->SR &= ~(ADC_SR_OVR | ADC_SR_EOC);
 		
-		/* Enable ADC DMA mode*/
-		ADC1->CR2 |= ADC_CR2_DMA; 
-		
-		/* Start DMA channel */
-		
-		if (DMA2_Stream4->CR & DMA_SxCR_EN)
+		if (ADC1->CR2 & ADC_CR2_ADON)
 		{
-			/* Disable DMA stream */
-			DMA2_Stream4->CR &= ~DMA_SxCR_EN;
+			/* Clear end of conversion and overrun flag */
+			ADC1->SR &= ~(ADC_SR_OVR | ADC_SR_EOC);
 			
-			/* Waitng for stream is disabled */
-			while (DMA2_Stream4->CR & DMA_SxCR_EN);
+			/* Enable ADC DMA mode*/
+			ADC1->CR2 |= ADC_CR2_DMA; 
+			
+			/* Start DMA channel */
+			
+			if (DMA2_Stream4->CR & DMA_SxCR_EN)
+			{
+				/* Disable DMA stream */
+				DMA2_Stream4->CR &= ~DMA_SxCR_EN;
+				
+				/* Waitng for stream is disabled */
+				while (DMA2_Stream4->CR & DMA_SxCR_EN);
+			}
 		}
+		
+		/* Prioriyt level high*/
+		DMA2_Stream4->CR |= DMA_SxCR_PL_1;
+		
+		/* Memory address pointer is incremented after each data transfer */
+		DMA2_Stream4->CR |= DMA_SxCR_MINC;
+		
+		/* Circular mode enable */
+		DMA2_Stream4->CR |= DMA_SxCR_CIRC;
+		
+		/* Memory word width 16 bit */
+		DMA2_Stream4->CR |= DMA_SxCR_MSIZE_0;
+		
+		/* Periph word width 16 bit */
+		DMA2_Stream4->CR |= DMA_SxCR_PSIZE_0;
+		
+		/* Configure DMA Stream data length */
+		DMA2_Stream4->NDTR = len;
+		
+		/* Configure DMA Stream direction as periph to mem */
+		DMA2_Stream4->CR &= ~(DMA_SxCR_DIR_0 | DMA_SxCR_DIR_1); 
+		
+		/* Configure DMA Stream source address */
+		DMA2_Stream4->PAR  = (uint32_t)&ADC1->DR;
+		
+		/* Configure DMA Stream destination address */
+		DMA2_Stream4->M0AR = (uint32_t)buff;
+		
+		/* Clear all interrupt flags */
+		DMA2->HIFCR |= (DMA_HIFCR_CTCIF4 | DMA_HIFCR_CHTIF4 | DMA_HIFCR_CTEIF4 | DMA_HIFCR_CDMEIF4 | DMA_HIFCR_CFEIF4);
+		
+		/* Enable transfer complete interrupt */
+		DMA2_Stream4->CR |= DMA_SxCR_TCIE;
+		
+		/* Enable the Peripheral */
+		DMA2_Stream4->CR |= DMA_SxCR_EN;
+		
+		/* Enable the selected ADC software conversion for regular group */ 
+		ADC1->CR2 |= (uint32_t)ADC_CR2_SWSTART;
 	}
-	
-	/* Prioriyt level high*/
-	DMA2_Stream4->CR |= DMA_SxCR_PL_1;
-	
-	/* Memory address pointer is incremented after each data transfer */
-	DMA2_Stream4->CR |= DMA_SxCR_MINC;
-	
-	/* Circular mode enable */
-	DMA2_Stream4->CR |= DMA_SxCR_CIRC;
-	
-	/* Memory word width 16 bit */
-	DMA2_Stream4->CR |= DMA_SxCR_MSIZE_0;
-	
-	/* Periph word width 16 bit */
-	DMA2_Stream4->CR |= DMA_SxCR_PSIZE_0;
-	
-	/* Configure DMA Stream data length */
-	DMA2_Stream4->NDTR = len;
-	
-	/* Configure DMA Stream direction as periph to mem */
-	DMA2_Stream4->CR &= ~(DMA_SxCR_DIR_0 | DMA_SxCR_DIR_1); 
-	
-	/* Configure DMA Stream source address */
-	DMA2_Stream4->PAR  = (uint32_t)&ADC1->DR;
-	
-	/* Configure DMA Stream destination address */
-	DMA2_Stream4->M0AR = (uint32_t)buff;
-	
-	/* Clear all interrupt flags */
-	DMA2->HIFCR |= (DMA_HIFCR_CTCIF4 | DMA_HIFCR_CHTIF4 | DMA_HIFCR_CTEIF4 | DMA_HIFCR_CDMEIF4 | DMA_HIFCR_CFEIF4);
-	
-	/* Enable transfer complete interrupt */
-	DMA2_Stream4->CR |= DMA_SxCR_TCIE;
-	
-	/* Enable the Peripheral */
-	DMA2_Stream4->CR |= DMA_SxCR_EN;
-	
-	/* Enable the selected ADC software conversion for regular group */ 
-	ADC1->CR2 |= (uint32_t)ADC_CR2_SWSTART;
 }
 
 void ADC_StopConv()
 {
-	/* Disable ADC */ 
-	ADC1->CR2 &= ~ADC_CR2_ADON;
-	
-	/* Check if ADC is effectively disabled */
-	if ((ADC1->CR2 & ADC_CR2_ADON) == 0U)
+	/* If ADC is enabled we need to disable it */
+	if (ADC1->CR2 & ADC_CR2_ADON)
 	{
-		/* Disable the selected ADC DMA mode */
-		ADC1->CR2 &= ~ADC_CR2_DMA;
+		/* Disable ADC */ 
+		ADC1->CR2 &= ~ADC_CR2_ADON;
 		
-		/* Disable transfer complete interrupt */
-		DMA2_Stream4->CR &= ~DMA_SxCR_TCIE;
-		
-		/* Disable the stream */
-		DMA2_Stream4->CR &= ~DMA_SxCR_EN;
-		
-		/* Check if the DMA Stream is effectively disabled */
-		while (DMA2_Stream4->CR & DMA_SxCR_EN);
-		
-		/* Clear all interrupt flags */
-		DMA2->HIFCR |= (DMA_HIFCR_CTCIF4 | DMA_HIFCR_CHTIF4 | DMA_HIFCR_CTEIF4 | DMA_HIFCR_CDMEIF4 | DMA_HIFCR_CFEIF4);
+		/* Check if ADC is effectively disabled */
+		if ((ADC1->CR2 & ADC_CR2_ADON) == 0U)
+		{
+			/* Disable the selected ADC DMA mode */
+			ADC1->CR2 &= ~ADC_CR2_DMA;
+			
+			/* Disable transfer complete interrupt */
+			DMA2_Stream4->CR &= ~DMA_SxCR_TCIE;
+			
+			/* Disable the stream */
+			DMA2_Stream4->CR &= ~DMA_SxCR_EN;
+			
+			/* Check if the DMA Stream is effectively disabled */
+			while (DMA2_Stream4->CR & DMA_SxCR_EN);
+			
+			/* Clear all interrupt flags */
+			DMA2->HIFCR |= (DMA_HIFCR_CTCIF4 | DMA_HIFCR_CHTIF4 | DMA_HIFCR_CTEIF4 | DMA_HIFCR_CDMEIF4 | DMA_HIFCR_CFEIF4);
+		}
 	}
 }
 
