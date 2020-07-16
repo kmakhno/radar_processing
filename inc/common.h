@@ -21,6 +21,17 @@
 #define STOP_CMD  255U
 /********************/
 
+/* Sizes of different periods of sawtooth signal */
+#define SAWTOOTH100MCS_SIZE   240UL
+#define SAWTOOTH50MCS_SIZE    120UL
+#define SAWTOOTH33_5MCS_SIZE  80UL
+#define SAWTOOTH25MCS_SIZE    60UL
+/*************************************************/
+
+/* Number impulses we need to skip */
+#define SKIP_IMP_NUMBER 15U
+/***********************************/
+
 struct settings
 {
 	uint8_t tsweep;

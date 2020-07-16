@@ -80,6 +80,14 @@ int main(void)
 			
 			case PROCESS_ON:
 				DAC_Enable(rPacket.stg.tsweep);
+				if (Get_ADC_ConversionStatus())
+				{
+					//ADC_StartConv();
+				}
+				else
+				{
+					ADC_StopConv();
+				}
 			break;
 		}
 #endif
