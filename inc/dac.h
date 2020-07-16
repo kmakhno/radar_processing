@@ -4,9 +4,7 @@
 #include "stdint.h"
 
 void DAC_Init(void);
-void DAC_StartConv(void);
+void DAC_Enable(uint8_t type);
 void DAC_StopConv(void);
-uint8_t DAC_GetTransferStatus(void);
-void DAC_ClearTransferStatus(void);
 
 #endif /* DAC_H */
