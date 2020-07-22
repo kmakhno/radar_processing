@@ -10,6 +10,7 @@ extern void USART3_IRQHandler(void);
 static volatile uint8_t rxData[RX_DATA_SIZE] = {0};
 static volatile uint8_t rxCnt = 0;
 static volatile uint8_t dataReceived = 0;
+static volatile uint8_t dataWasTransmitted = 0;
 #else
 volatile uint8_t rxData[RX_DATA_SIZE] = {0};
 volatile uint8_t rxCnt = 0;
@@ -82,6 +83,7 @@ void DMA1_Stream3_IRQHandler(void)
 	if (DMA1->LISR & DMA_LISR_TCIF3)
 	{
 		DMA1->LIFCR |= DMA_LIFCR_CTCIF3; //clear interrupt before sending
+		dataWasTransmitted = 1;
 	}
 }
 
@@ -112,4 +114,15 @@ void UART_UpdateCommands(struct packets *pck)
 		pck->stg.tsweep = rxData[1];
 		pck->stg.bandwidth = rxData[2];
 	}
+}
+
+
+uint8_t UART_Get_DataTransferStatus()
+{
+	return dataWasTransmitted;
+}
+
+void UART_Clear_DataTransferStatus()
+{
+	dataWasTransmitted = 0;
 }
