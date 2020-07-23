@@ -73,8 +73,9 @@ void ADC_StartConv(uint16_t *buff, uint32_t len)
 	/*If ADC is disabled we need to enable it */
 	if ((ADC1->CR2 & ADC_CR2_ADON) != ADC_CR2_ADON)
 	{
-		volatile uint32_t counter = 0U;
 		ADC1->CR2 |= ADC_CR2_ADON; //enable ADC
+#if 0
+		volatile uint32_t counter = 0U;
 		counter = (3 * (SystemCoreClock / 1000000U));
 		
 		/* Waiting for ADC is stabilize */
@@ -82,6 +83,7 @@ void ADC_StartConv(uint16_t *buff, uint32_t len)
 		{
 			counter--;
 		} 
+#endif
 		
 		if (ADC1->CR2 & ADC_CR2_ADON)
 		{

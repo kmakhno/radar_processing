@@ -27,34 +27,42 @@ Project File Date:  07/15/2020
 <h2>Output:</h2>
 *** Using Compiler 'V6.14', folder: 'C:\Keil_v5\ARM\ARMCLANG\Bin'
 Build target 'Target 1'
-src/main.c(17): warning: no previous extern declaration for non-static variable 'nextState' [-Wmissing-variable-declarations]
+src/main.c(27): warning: no previous extern declaration for non-static variable 'nextState' [-Wmissing-variable-declarations]
 enum states nextState = PROCESS_OFF;
             ^
-src/main.c(17): note: declare 'static' if the variable is not intended to be used outside of this translation unit
+src/main.c(27): note: declare 'static' if the variable is not intended to be used outside of this translation unit
 enum states nextState = PROCESS_OFF;
 ^
-src/main.c(22): warning: no previous extern declaration for non-static variable 'rPacket' [-Wmissing-variable-declarations]
+src/main.c(34): warning: no previous extern declaration for non-static variable 'rPacket' [-Wmissing-variable-declarations]
 struct packets rPacket = {0};
                ^
-src/main.c(22): note: declare 'static' if the variable is not intended to be used outside of this translation unit
+src/main.c(34): note: declare 'static' if the variable is not intended to be used outside of this translation unit
 struct packets rPacket = {0};
 ^
-src/main.c(16): warning: no previous extern declaration for non-static variable 'state' [-Wmissing-variable-declarations]
+src/main.c(35): warning: no previous extern declaration for non-static variable 'tPacket' [-Wmissing-variable-declarations]
+uint16_t *tPacket = NULL;
+          ^
+src/main.c(35): note: declare 'static' if the variable is not intended to be used outside of this translation unit
+uint16_t *tPacket = NULL;
+^
+src/main.c(41): warning: no previous extern declaration for non-static variable 'matrix' [-Wmissing-variable-declarations]
+uint16_t matrix[SAWTOOTH100MCS_SIZE] = {0};
+         ^
+src/main.c(41): note: declare 'static' if the variable is not intended to be used outside of this translation unit
+uint16_t matrix[SAWTOOTH100MCS_SIZE] = {0};
+^
+src/main.c(26): warning: no previous extern declaration for non-static variable 'state' [-Wmissing-variable-declarations]
 enum states state;
             ^
-src/main.c(16): note: declare 'static' if the variable is not intended to be used outside of this translation unit
+src/main.c(26): note: declare 'static' if the variable is not intended to be used outside of this translation unit
 enum states state;
 ^
-3 warnings generated.
+5 warnings generated.
 compiling main.c...
-compiling adc.c...
-compiling dac.c...
-compiling common.c...
-compiling uart.c...
 linking...
-Program Size: Code=1948 RO-data=1440 RW-data=4 ZI-data=1648  
+Program Size: Code=3032 RO-data=1440 RW-data=8 ZI-data=2136  
 FromELF: creating hex file...
-".\Objects\radar_processing.axf" - 0 Error(s), 3 Warning(s).
+".\Objects\radar_processing.axf" - 0 Error(s), 5 Warning(s).
 
 <h2>Software Packages used:</h2>
 
